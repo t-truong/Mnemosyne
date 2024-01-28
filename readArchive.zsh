@@ -22,7 +22,7 @@ autoload colors && colors
 #Initialization-------------------------------------------------------------------------------------
 Paths_Source=("${@[1,-1]}")
 for p in $Paths_Source; do
-    b=$(basename $p)
+    b=${p:t:r}
     if [[ ! -d "$p" ]]; then
         echo "$fg[red]Error:$reset_color Archive source {$p} given is not a directory or does not exist"
         exit 1
@@ -37,8 +37,8 @@ done
 
 echo "Will read these from archive: {$fg[cyan]$Paths_Source$reset_color}"
 for p in $Paths_Source; do
-    if [[ -d "./$(basename $p)" ]]; then
-        echo "$fg[yellow]Warning:$reset_color Local directory {./$(basename $p)} already exists, will overwrite files inside"
+    if [[ -d "./${p:t:r}" ]]; then
+        echo "$fg[yellow]Warning:$reset_color Local directory {./${p:t:r}} already exists, will overwrite files inside"
     fi
 done
 read -q "confirm?Begin read process? [y/N]: " && [[ "$confirm" == [yY] ]] && echo "" || exit 0
@@ -49,7 +49,7 @@ unset x
 echo ""
 #Archive Process------------------------------------------------------------------------------------
 for source in $Paths_Source; do
-    b=$(basename $source)
+    b=${source:t:r}
     destination="./$b"
     mkdir -p "$destination"
     echo "Reading {$fg[cyan]$source$reset_color}"
